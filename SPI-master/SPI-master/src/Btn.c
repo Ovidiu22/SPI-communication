@@ -4,7 +4,7 @@
 
 
 /* *****************************************************************
-Name:		initButton()
+Name:		init_Btn()
 Inputs:		none
 Outputs:	none
 Description:initializes PIN D2 as interrupt triggered by low level

@@ -7,19 +7,17 @@
 
 #include "SPI.h"
 #include "Btn.h"
-#include "Diagnostics.h"
 
 
 int main(void)
 {
 	init_Btn();
-	//init_RGB();
-	uint8_t spi_reg = 0;
+	init_SPI();
+	uint8_t btn_state = 0;
 	while (1)
 	{
-		//spi_reg = Btn_pin & (1<<Btn_bit);
-		spi_reg = 1;
-		send_spi(spi_reg);
+		btn_state = Btn_pin & (1<<Btn_bit);
+		send_spi(btn_state);
 	}
 }
 

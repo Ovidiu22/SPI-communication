@@ -21,10 +21,11 @@ Description:Initialization of SPI pins
 ******************************************************************** */
 void init_SPI()
 {
+	DDRB = 0x00;
 	DDRB |= (1<<SSPin) | (1<<SCKPin) | (1<<MOSIPin) ;  //set MOSI, clock and SlaveSelect as output
-	DDRB &= ~(1<<MISOPin);											//Set MOSI[MISO of nRF] as Input
+	//DDRB &= ~(1<<MISOPin);											//Set MOSI[MISO of nRF] as Input
 	
-	SPCR |= (1 << SPE) | (1 << MSTR);				// Enable SPI as master
+	SPCR |= (1 << SPE) | (1 << MSTR) | (1 << SPR0) ;				// Enable SPI as master
 	
 	set_SS_high;							//SlaveSelect To HIGH- not sending any command
 }
@@ -46,33 +47,15 @@ uint8_t spi_tranceiver (uint8_t data)
 }
 
 /* *****************************************************************
-Name:		GetReg()
-Inputs:		name of register to be read
+Name:		send_spi()
+Inputs:		data to be sent
 Outputs:	data of the register
 Description:Reads the called register
 ******************************************************************** */
 void send_spi(uint8_t data)
 {
-	_delay_us(10);						//Delay for 10us
-	set_SS_low;							//Set SS Low - nRf starts listening for commands 10us after SS Low
-	_delay_us(12);						//Delay for 12us
+	set_SS_low;							
 	spi_tranceiver(data);
-	_delay_us(12);						//Delay 12us
-	set_SS_high;						//SS High
+	set_SS_high;		
 }
-
-/* *****************************************************************
-Name:		receive_spi()
-Inputs:		name of register to be read
-Outputs:	data of the register
-Description:Reads the called register
-******************************************************************** */
-/*uint8_t receive_spi(uint8_t data)
-{
-	uint8_t res = 0;
-	_delay_us(10);						//Delay for 10us
-	res = spi_tranceiver(data);
-	_delay_us(12);						//Delay 12us
-	return res;
-}*/
 

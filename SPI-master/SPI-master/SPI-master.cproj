@@ -223,12 +223,6 @@
     <Compile Include="src\Btn.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\Diagnostics.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\Diagnostics.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\SPI.c">
       <SubType>compile</SubType>
     </Compile>

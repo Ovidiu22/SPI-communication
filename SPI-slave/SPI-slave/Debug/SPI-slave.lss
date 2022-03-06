@@ -3,31 +3,31 @@ SPI-slave.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  000000fc  2**0
+  0 .data         00000000  00800100  00800100  00000102  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000000a8  00000000  00000000  00000054  2**1
+  1 .text         000000ae  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  000000fc  2**0
+  2 .comment      00000030  00000000  00000000  00000102  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  0000012c  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000134  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000080  00000000  00000000  0000016c  2**0
+  4 .debug_aranges 00000070  00000000  00000000  00000174  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00000916  00000000  00000000  000001ec  2**0
+  5 .debug_info   00000853  00000000  00000000  000001e4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 000007c4  00000000  00000000  00000b02  2**0
+  6 .debug_abbrev 00000753  00000000  00000000  00000a37  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000a9c  00000000  00000000  000012c6  2**0
+  7 .debug_line   000009e0  00000000  00000000  0000118a  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000000cc  00000000  00000000  00001d64  2**2
+  8 .debug_frame  0000008c  00000000  00000000  00001b6c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00006f26  00000000  00000000  00001e30  2**0
+  9 .debug_str    00006e14  00000000  00000000  00001bf8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000001bf  00000000  00000000  00008d56  2**0
+ 10 .debug_loc    0000005d  00000000  00000000  00008a0c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000050  00000000  00000000  00008f15  2**0
+ 11 .debug_ranges 00000040  00000000  00000000  00008a69  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_macro  00002a89  00000000  00000000  00008f65  2**0
+ 12 .debug_macro  00002a59  00000000  00000000  00008aa9  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -93,88 +93,88 @@ Disassembly of section .text:
   6e:	d8 e0       	ldi	r29, 0x08	; 8
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
-  74:	0f d0       	rcall	.+30     	; 0x94 <main>
-  76:	16 c0       	rjmp	.+44     	; 0xa4 <_exit>
+  74:	10 d0       	rcall	.+32     	; 0x96 <main>
+  76:	19 c0       	rjmp	.+50     	; 0xaa <_exit>
 
 00000078 <__bad_interrupt>:
   78:	c3 cf       	rjmp	.-122    	; 0x0 <__vectors>
 
-0000007a <spi_tranceiver>:
+0000007a <init_SPI>:
+Outputs:	none
+Description:Initialization of SPI pins
+******************************************************************** */
+void init_SPI()
+{
+	DDRB = (1<<MISOPin) ;
+  7a:	88 e0       	ldi	r24, 0x08	; 8
+  7c:	84 b9       	out	0x04, r24	; 4
+	SPCR |= (1 << SPE);				// Enable SPI as slave
+  7e:	8c b5       	in	r24, 0x2c	; 44
+  80:	80 64       	ori	r24, 0x40	; 64
+  82:	8c bd       	out	0x2c, r24	; 44
+  84:	08 95       	ret
+
+00000086 <spi_tranceiver>:
 Description:Reads the SPI transceiver buffer
 ******************************************************************** */
 uint8_t spi_tranceiver (uint8_t data)
 {
 	/* Load data in the buffer */
 	SPDR = data;
-  7a:	8e bd       	out	0x2e, r24	; 46
+  86:	8e bd       	out	0x2e, r24	; 46
 	/* Wait for the complete transmission */
 	while(!(SPSR & (1<<SPIF)));
-  7c:	0d b4       	in	r0, 0x2d	; 45
-  7e:	07 fe       	sbrs	r0, 7
-  80:	fd cf       	rjmp	.-6      	; 0x7c <spi_tranceiver+0x2>
+  88:	0d b4       	in	r0, 0x2d	; 45
+  8a:	07 fe       	sbrs	r0, 7
+  8c:	fd cf       	rjmp	.-6      	; 0x88 <spi_tranceiver+0x2>
 	/* Return received data */
-	return(SPDR);
-  82:	8e b5       	in	r24, 0x2e	; 46
+	return SPDR;
+  8e:	8e b5       	in	r24, 0x2e	; 46
 }
-  84:	08 95       	ret
+  90:	08 95       	ret
 
-00000086 <receive_spi>:
-******************************************************************** */
-uint8_t receive_spi(void)
-{
-	uint8_t res = 0;
-	//_delay_us(10);						//Delay for 10us
-	res = spi_tranceiver(0xFF);
-  86:	8f ef       	ldi	r24, 0xFF	; 255
-  88:	f8 cf       	rjmp	.-16     	; 0x7a <spi_tranceiver>
-	//_delay_us(12);						//Delay 12us
-	return res;
-}
-  8a:	08 95       	ret
-
-0000008c <init_RGB>:
+00000092 <init_LED>:
 Outputs:	none
 Description:initializes the RGB Led
 ******************************************************************** */
-void init_RGB(void)
+void init_LED(void)
 {
-	DDRD |= (1<<RED_pin) | (1<<BLUE_pin) | (1<<GREEN_pin);  //
-  8c:	8a b1       	in	r24, 0x0a	; 10
-  8e:	80 67       	ori	r24, 0x70	; 112
-  90:	8a b9       	out	0x0a, r24	; 10
-  92:	08 95       	ret
+	DDRD |= (1<<LED_pin);  //
+  92:	55 9a       	sbi	0x0a, 5	; 10
+  94:	08 95       	ret
 
-00000094 <main>:
+00000096 <main>:
 #include "Diagnostics.h"
 
 int main (void)
 {
 	uint8_t spi_res = 0;
-	init_RGB();
-  94:	fb df       	rcall	.-10     	; 0x8c <init_RGB>
+	init_LED();
+  96:	fd df       	rcall	.-6      	; 0x92 <init_LED>
+	init_SPI();
+  98:	f0 df       	rcall	.-32     	; 0x7a <init_SPI>
 
 	while (1)
 	{
-		spi_res = receive_spi();
-  96:	f7 df       	rcall	.-18     	; 0x86 <receive_spi>
-  98:	81 11       	cpse	r24, r1
-		//spi_res = 1;
-		if (spi_res >= 1)
-  9a:	5d 9a       	sbi	0x0b, 5	; 11
+		spi_res = spi_tranceiver(0xFF);
+  9a:	8f ef       	ldi	r24, 0xFF	; 255
+  9c:	f4 df       	rcall	.-24     	; 0x86 <spi_tranceiver>
+  9e:	88 23       	and	r24, r24
+		if (spi_res > 0)
+  a0:	11 f0       	breq	.+4      	; 0xa6 <main+0x10>
+  a2:	5d 9a       	sbi	0x0b, 5	; 11
 		{
-			set_BLUE_high;
-  9c:	8b b1       	in	r24, 0x0b	; 11
+			set_LED_high;
+  a4:	fa cf       	rjmp	.-12     	; 0x9a <main+0x4>
+  a6:	5d 98       	cbi	0x0b, 5	; 11
 		}
+		else
 		{
-			set_RGB_low;
-  9e:	8f 78       	andi	r24, 0x8F	; 143
-  a0:	8b b9       	out	0x0b, r24	; 11
-  a2:	f9 cf       	rjmp	.-14     	; 0x96 <main+0x2>
+			set_LED_low;
+  a8:	f8 cf       	rjmp	.-16     	; 0x9a <main+0x4>
 
-000000a4 <_exit>:
-		}
-	}
-  a4:	f8 94       	cli
+000000aa <_exit>:
+  aa:	f8 94       	cli
 
-000000a6 <__stop_program>:
-  a6:	ff cf       	rjmp	.-2      	; 0xa6 <__stop_program>
+000000ac <__stop_program>:
+  ac:	ff cf       	rjmp	.-2      	; 0xac <__stop_program>

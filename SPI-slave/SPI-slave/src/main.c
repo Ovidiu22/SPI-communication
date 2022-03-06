@@ -11,18 +11,20 @@
 int main (void)
 {
 	uint8_t spi_res = 0;
-	init_RGB();
+	init_LED();
+	init_SPI();
 
 	while (1)
 	{
-		spi_res = receive_spi();
-		//spi_res = 1;
-		if (spi_res >= 1)
+		spi_res = spi_tranceiver(0xFF);
+		if (spi_res > 0)
 		{
-			set_BLUE_high;
+			set_LED_high;
 		}
+		else
 		{
-			set_RGB_low;
+			set_LED_low;
 		}
+
 	}
 }

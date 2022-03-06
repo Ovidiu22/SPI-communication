@@ -21,14 +21,8 @@ Description:Initialization of SPI pins
 ******************************************************************** */
 void init_SPI()
 {
-	DDRB |= (1<<MISOPin) ;	//
-	
-	DDRB &= ~(1<<MOSIPin);
-	DDRB &= ~(1<<SCKPin);
-	DDRB &= ~(1<<SSPin);
-	
-	SPCR |= (1 << SPE);				// Enable SPI as 
-
+	DDRB = (1<<MISOPin) ;
+	SPCR |= (1 << SPE);				// Enable SPI as slave
 }
 
 /* *****************************************************************
@@ -44,21 +38,19 @@ uint8_t spi_tranceiver (uint8_t data)
 	/* Wait for the complete transmission */
 	while(!(SPSR & (1<<SPIF)));
 	/* Return received data */
-	return(SPDR);
+	return SPDR;
 }
 
 /* *****************************************************************
 Name:		receive_spi()
-Inputs:		name of register to be read
+Inputs:		none
 Outputs:	data of the register
-Description:Reads the called register
+Description:Reads the SPI buffer
 ******************************************************************** */
 uint8_t receive_spi(void)
 {
 	uint8_t res = 0;
-	//_delay_us(10);						//Delay for 10us
 	res = spi_tranceiver(0xFF);
-	//_delay_us(12);						//Delay 12us
 	return res;
 }
 
