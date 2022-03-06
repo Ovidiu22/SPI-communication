@@ -1,18 +1,9 @@
-/*
- * SPI.h
- *
- * Created: 22.02.2022 19:21:29
- *  Author: lenovo
- */ 
-
 
 #ifndef SPI_H_
 #define SPI_H_
 
-	/* Communication Pins */
-
+	/* SPI Pins */
 	#define PORT_SPI PORTB
-
 
 	#define SSPin		PINB2
 	#define SCKPin		PINB5

@@ -100,11 +100,11 @@ Disassembly of section .text:
   78:	c3 cf       	rjmp	.-122    	; 0x0 <__vectors>
 
 0000007a <init_Btn>:
-Description:initializes PIN D2 as interrupt triggered by low level
+Outputs:	none
+Description:initializes PIN D3 as an output with initial state low
 ******************************************************************** */
 void init_Btn(void)
 {
-	/* Input port with pull-up */
 	DDRD |= (1<<Btn_bit);
   7a:	53 9a       	sbi	0x0a, 3	; 10
 	PORTD &= ~(1<<Btn_bit);
@@ -119,23 +119,22 @@ void init_SPI()
 {
 	DDRB = 0x00;
   80:	14 b8       	out	0x04, r1	; 4
-	DDRB |= (1<<SSPin) | (1<<SCKPin) | (1<<MOSIPin) ;  //set MOSI, clock and SlaveSelect as output
+	DDRB |= (1<<SSPin) | (1<<SCKPin) | (1<<MOSIPin) ;	//set MOSI, clock and SlaveSelect as output
   82:	84 b1       	in	r24, 0x04	; 4
   84:	8c 62       	ori	r24, 0x2C	; 44
   86:	84 b9       	out	0x04, r24	; 4
-	//DDRB &= ~(1<<MISOPin);											//Set MOSI[MISO of nRF] as Input
-	
-	SPCR |= (1 << SPE) | (1 << MSTR) | (1 << SPR0) ;				// Enable SPI as master
+
+	SPCR |= (1 << SPE) | (1 << MSTR) | (1 << SPR0) ;	// Enable SPI as master
   88:	8c b5       	in	r24, 0x2c	; 44
   8a:	81 65       	ori	r24, 0x51	; 81
   8c:	8c bd       	out	0x2c, r24	; 44
 	
-	set_SS_high;							//SlaveSelect To HIGH- not sending any command
+	set_SS_high;	//SlaveSelect To HIGH - not sending any command
   8e:	2a 9a       	sbi	0x05, 2	; 5
   90:	08 95       	ret
 
 00000092 <spi_tranceiver>:
-Description:Reads the SPI transceiver buffer
+Description:Loads data into SPI transceiver buffer and returns received data
 ******************************************************************** */
 uint8_t spi_tranceiver (uint8_t data)
 {
@@ -154,35 +153,35 @@ uint8_t spi_tranceiver (uint8_t data)
   9c:	08 95       	ret
 
 0000009e <send_spi>:
-Outputs:	data of the register
-Description:Reads the called register
+Outputs:	none
+Description:sends a Byte over SPI
 ******************************************************************** */
 void send_spi(uint8_t data)
 {
-	set_SS_low;							
+	set_SS_low;				// Set SlaveSelect low, SPI starts					
   9e:	2a 98       	cbi	0x05, 2	; 5
-	spi_tranceiver(data);
+	spi_tranceiver(data);	// Send data over MOSI
   a0:	f8 df       	rcall	.-16     	; 0x92 <spi_tranceiver>
-	set_SS_high;		
+	set_SS_high;			// Set SlaveSelect high, SPI stops
   a2:	2a 9a       	sbi	0x05, 2	; 5
   a4:	08 95       	ret
 
 000000a6 <main>:
 #include "Btn.h"
 
-
+/*-------------- Main function ----------------*/
 int main(void)
 {
-	init_Btn();
+	init_Btn();				// Initialize button
   a6:	e9 df       	rcall	.-46     	; 0x7a <init_Btn>
-	init_SPI();
+	init_SPI();				// Initialize SPI 
   a8:	eb df       	rcall	.-42     	; 0x80 <init_SPI>
   aa:	89 b1       	in	r24, 0x09	; 9
-	uint8_t btn_state = 0;
+	uint8_t btn_state = 0;	// Variable for button state (pressed / released)
 	while (1)
 	{
-		btn_state = Btn_pin & (1<<Btn_bit);
-		send_spi(btn_state);
+		btn_state = Btn_pin & (1<<Btn_bit);		// check button state
+		send_spi(btn_state);		// Send status button over SPI
   ac:	88 70       	andi	r24, 0x08	; 8
   ae:	f7 df       	rcall	.-18     	; 0x9e <send_spi>
   b0:	fc cf       	rjmp	.-8      	; 0xaa <main+0x4>

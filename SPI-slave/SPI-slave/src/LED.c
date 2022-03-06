@@ -1,9 +1,3 @@
-/*
- * Diagnostics.c
- *
- * Created: 28.03.2020 18:17:38
- *  Author: lenovo
- */ 
 
 #ifndef F_CPU
 #define F_CPU 16000000ul
@@ -11,16 +5,16 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
-#include "Diagnostics.h"
+#include "LED.h"
 
 /* *****************************************************************
-Name:		init_RGB()
+Name:		init_LED()
 Inputs:		none
 Outputs:	none
-Description:initializes the RGB Led
+Description:initializes the LED
 ******************************************************************** */
 void init_LED(void)
 {
-	DDRD |= (1<<LED_pin);  //
+	DDRD |= (1<<LED_pin);
 }
 

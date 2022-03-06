@@ -292,10 +292,10 @@
     <Compile Include="src\ASF\mega\boards\atmega328p_xplained_mini\init.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\Diagnostics.c">
+    <Compile Include="src\LED.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\Diagnostics.h">
+    <Compile Include="src\LED.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\main.c">

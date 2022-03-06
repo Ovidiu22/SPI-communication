@@ -1,6 +1,6 @@
 
-#ifndef DIAGNOSTICS_H_
-#define DIAGNOSTICS_H_
+#ifndef LED_H_
+#define LED_H_
 
 
 #define LED_pin	PIND5
@@ -12,4 +12,4 @@
 /* Prototype functions */
 void init_LED(void);
 
-#endif /* DIAGNOSTICS_H_ */
+#endif /* LED_H_ */
