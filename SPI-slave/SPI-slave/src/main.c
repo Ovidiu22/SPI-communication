@@ -1,10 +1,14 @@
+/*******************************/
+/*** Created by Ovidiu Sabau ***/
+/***	  6th March 2022	 ***/
+/*******************************/
+
 #ifndef F_CPU
 #define F_CPU 16000000UL
 #endif
 
 /*----------------- Include -------------------*/
 #include <avr/io.h>
-#include <util/delay.h>
 #include "SPI.h"
 #include "LED.h"
 

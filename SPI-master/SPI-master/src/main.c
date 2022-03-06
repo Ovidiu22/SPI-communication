@@ -9,7 +9,6 @@
 
 /*----------------- Include -------------------*/
 #include <avr/io.h>
-#include <util/delay.h>
 #include "SPI.h"
 #include "Btn.h"
 
