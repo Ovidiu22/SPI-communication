@@ -1,5 +1,6 @@
 # SPI-communication
 The C-code of a master and slave that communicate over SPI.
+The code was written in Atmel Studio and is supposed to demonstrate the functionality of the SPI communication.
 
 # Master
 - reads the state of a button
@@ -11,6 +12,5 @@ The C-code of a master and slave that communicate over SPI.
 - Turns on the LED in case button is pressed
 - Turns off the LED in case button is not pressed
 
-The code was written in Atmel Studio and is supposed to demonstrate the functionality of the SPI. It can be integrated in bigger projects.
-
-Schematic follows.
+Schematic:
+![grafik](https://user-images.githubusercontent.com/75970114/156928800-558700fe-855b-4e23-88f7-b167ededae27.png)
