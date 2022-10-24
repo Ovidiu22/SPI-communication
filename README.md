@@ -1,6 +1,6 @@
 # SPI-communication
-The C-code of a master and slave that communicate over SPI.
-The code was written in Atmel Studio and is supposed to demonstrate the functionality of the SPI communication.
+The C-code of a master and slave that communicate over SPI.  
+The code was written in Atmel Studio and is supposed to demonstrate the functionality of the SPI communication between two Arduino UNO/NANO.
 
 # Master
 - reads the state of a button
